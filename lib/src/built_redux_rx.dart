@@ -27,7 +27,9 @@ Middleware<V, B, A> createEpicMiddleware<
               .transform<dynamic>(
                   SwitchMapStreamTransformer<Epic<V, B, A>, dynamic>(
                       (epic) => epic(Observable(_actions.stream), mwApi)))
-              .listen((dynamic _) => next(action));
+              .listen((dynamic _) { 
+                //next(action);
+              });
 
           _epics.add(combined);
 
