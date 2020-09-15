@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:built_redux/built_redux.dart';
 import 'package:built_redux_rx/built_redux_rx.dart';
 import 'package:test/test.dart';
-import 'package:rxdart/rxdart.dart';
 
 import 'test_counter.dart';
 
@@ -64,7 +63,7 @@ void main() {
   });
 }
 
-Observable<void> asyncIncrement(Observable<Action<dynamic>> stream,
+Stream<void> asyncIncrement(Stream<Action<dynamic>> stream,
         MiddlewareApi<Counter, CounterBuilder, CounterActions> mwApi) =>
     stream
         .where((a) => a.name == CounterActionsNames.incrementAsync.name)
@@ -74,7 +73,7 @@ Observable<void> asyncIncrement(Observable<Action<dynamic>> stream,
               .then((_) => mwApi.actions.increment(action.payload)),
         );
 
-Observable<void> asyncDecrement(Observable<Action<dynamic>> stream,
+Stream<void> asyncDecrement(Stream<Action<dynamic>> stream,
         MiddlewareApi<Counter, CounterBuilder, CounterActions> mwApi) =>
     stream
         .where((a) => a.name == CounterActionsNames.decrementAsync.name)
@@ -90,14 +89,14 @@ Iterable<Epic<Counter, CounterBuilder, CounterActions>> createEpicBuilder() =>
           ..add(CounterActionsNames.decrementAsync, asyncDecrementBuilder))
         .build();
 
-Observable<void> asyncIncrementBuilder(Observable<Action<int>> stream,
+Stream<void> asyncIncrementBuilder(Stream<Action<int>> stream,
         MiddlewareApi<Counter, CounterBuilder, CounterActions> mwApi) =>
     stream.asyncMap(
       (action) => new Future<void>.delayed(new Duration(milliseconds: 1))
           .then((_) => mwApi.actions.increment(action.payload)),
     );
 
-Observable<void> asyncDecrementBuilder(Observable<Action<int>> stream,
+Stream<void> asyncDecrementBuilder(Stream<Action<int>> stream,
         MiddlewareApi<Counter, CounterBuilder, CounterActions> mwApi) =>
     stream.asyncMap(
       (action) => new Future<void>.delayed(new Duration(milliseconds: 1))
